@@ -3,3 +3,11 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+header {
+  display: flex;
+}
+
+header > img {
+  display: 100%;
+}
