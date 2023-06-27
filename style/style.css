@@ -20,11 +20,15 @@ li > a {
 
 /* ==== Styling ==== */
 
-nav > ul {
-  display: flex;
-  justify-content: flex-end;  
+/* == NavBar == */
+
+nav {
+  background-color: rgb(6, 18, 40);
+  color: white;
 }
 
-nav > ul > li:nth-child(1) {
-  margin-right: auto;
+.hero {
+  background-color: rgb(6, 18, 40);
+  color: white
 }
+
