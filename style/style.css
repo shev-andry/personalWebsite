@@ -63,6 +63,7 @@ ul > li:nth-child(1) {
 
 .hero {
   padding: 5rem;
+  height: 100vh;
 }
 
 .hero > .container {
@@ -74,4 +75,25 @@ ul > li:nth-child(1) {
 .hero > .container > img {
   width: 50%;
   border-radius: 1rem;
+}
+
+@media (width < 600px) {
+  .hero {
+    padding: 0;
+  }
+
+.hero-text {
+  margin-top: 5rem;
+}
+
+  .hero > .container {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+  }
+
+  .hero > .container > img {
+    width: 100%;
+    border-radius: 1rem;
+  }
 }
