@@ -4,10 +4,11 @@
   box-sizing: border-box;
 }
 
-header {
+nav > ul {
   display: flex;
+  justify-content: flex-end;
 }
 
-header > img {
-  display: 100%;
+nav > ul:nth-child(1) {
+  margin-right: auto;
 }
