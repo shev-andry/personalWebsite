@@ -1,21 +1,39 @@
-:root {
-  font-family: monospace;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background-color: #000;
-  color: #eee
+  font-family: monospace;
+  color: white;
+  background-color: black;
+  padding: 0.3rem;
 }
 
-p {
-  margin: 0;
+.prompt {
+  display: flex;
+  gap: 2px;
 }
 
-a {
-  text-decoration: none;
+.user {
   color: green;
 }
 
-a:hover {
-  text-decoration: underline;
+.host {
+  color: lightseagreen;
+}
+
+.dir {
+  color: orange;
+}
+
+input {
+  background-color: black;
+  border: none;
+  color: white;
+}
+
+input:focus {
+  outline: none;
 }
