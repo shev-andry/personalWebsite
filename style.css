@@ -11,7 +11,7 @@ body {
   padding: 0.3rem;
 }
 
-.prompt {
+.ps1 {
   display: flex;
   gap: 2px;
 }
