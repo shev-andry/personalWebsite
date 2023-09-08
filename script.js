@@ -1,8 +1,45 @@
 const storage = () => {
-  let dir = "~";
+  let folderDirectory = {
+    '~': ['project/', 'profile/'],
+    'project/': []
+  }
+
+  let fileDirectory = {
+    '~': [],
+    'project/': ['test']
+  }
+  let prevWorkingDir = ''
+  let workingDir = "~";
+  let prevDir = ''
+  let currentDir = workingDir
+
+console.log(currentDir)
+  function changeDir(newDir) {
+    if (newDir === '..') {
+      if (currentDir === '~') return 'where u goin'
+      currentDir = prevDir
+      return workingDir = prevWorkingDir
+    }
+    if (!folderDirectory[currentDir].includes(newDir)) return false
+    prevWorkingDir = workingDir
+    prevDir = currentDir
+    currentDir = newDir
+    return workingDir = `${workingDir}/${newDir}`
+  }
+
+  function getDir() {
+    return workingDir
+  }
+
+  function getList() {
+    return `${folderDirectory[currentDir].join(' ')} ${fileDirectory[currentDir].join(' ')}`.split(' ').join(' ')
+  }
+
+  return {changeDir, getDir, getList}
 };
 
 const displayController = () => {
+  const memory = storage()
   const container = document.querySelector(".container");
   let input = document.querySelector(".prompt");
   let form = document.querySelector(".currentForm");
@@ -16,8 +53,11 @@ const displayController = () => {
     const form = document.createElement("form");
     const input = document.createElement("input");
     spanUser.innerText = "user";
+    spanUser.classList.add('user')
     spanHost.innerText = "@sevaaaDev";
-    spanDir.innerText = "[~]";
+    spanHost.classList.add('host')
+    spanDir.innerText = `[${memory.getDir()}]`;
+    spanDir.classList.add('dir')
     p.appendChild(spanUser);
     p.appendChild(spanHost);
     p.appendChild(spanDir);
@@ -53,15 +93,27 @@ const displayController = () => {
 
   let command = {
     ls: () => {
-      const dir = document.createElement("p");
-      dir.innerText = "tes";
-      container.appendChild(dir);
+      const list = document.createElement('p')
+      list.innerText = memory.getList()
+      console.log(memory.getList())
+      container.appendChild(list)
       enter();
     },
     cls: () => {
       container.innerHTML = "";
       enter();
     },
+    cd: (newDir) => {
+      const value = memory.changeDir(newDir)
+      const info = document.createElement('p')
+      if (value === false) {
+        info.innerText = 'No such directory'
+      } else if (value === 'where u goin') {
+        info.innerText = 'There is no directory up there'
+      }
+      container.appendChild(info)
+      enter()
+    }
   };
 
   return { enter, getInput, getForm, command };
@@ -70,16 +122,16 @@ const displayController = () => {
 const inputController = (() => {
   const display = displayController();
   let form = display.getForm();
+  let input = display.getInput();
   listenForm();
   window.addEventListener("click", () => {
-    input = display.getInput();
-    form = display.getForm();
     input.focus();
   });
-
+  
   function submit(e) {
     e.preventDefault();
     checkInput();
+    input = display.getInput();
     form = display.getForm();
     listenForm();
   }
@@ -89,8 +141,10 @@ const inputController = (() => {
   }
 
   function checkInput() {
-    input = display.getInput();
     if (input.value === '') return display.enter()
+    if (input.value.includes('cd')) {
+      return display.command[input.value.slice(0,2)](input.value.slice(3))
+    }
     display.command[input.value]()
   }
 })();
