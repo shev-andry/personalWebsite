@@ -143,6 +143,7 @@ const displayController = () => {
       const lscommand = document.createElement('p')
       lscommand.innerText = `cd <directory> [change directory]
       cat <filename> [see the content inside of a file]
+      open <filename> [open the link inside of a file]
       ls [list file & folder]
       cls [clear]`
       container.appendChild(lscommand)
