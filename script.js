@@ -1,45 +1,57 @@
 const storage = () => {
   let folderDirectory = {
-    '~': ['project/', 'profile/'],
-    'project/': []
-  }
+    "~": ["project/", "profile/"],
+    "project/": [],
+  };
 
   let fileDirectory = {
-    '~': [],
-    'project/': ['test']
-  }
-  let prevWorkingDir = ''
+    "~": [],
+    "project/": ["test"],
+  };
+  let prevWorkingDir = "";
   let workingDir = "~";
-  let prevDir = ''
-  let currentDir = workingDir
+  let prevDir = "";
+  let currentDir = workingDir;
 
-console.log(currentDir)
+  console.log(currentDir);
   function changeDir(newDir) {
-    if (newDir === '..') {
-      if (currentDir === '~') return 'where u goin'
-      currentDir = prevDir
-      return workingDir = prevWorkingDir
+    if (newDir === "..") {
+      if (currentDir === "~") return "where u goin";
+      currentDir = prevDir;
+      return (workingDir = prevWorkingDir);
     }
-    if (!folderDirectory[currentDir].includes(newDir)) return false
-    prevWorkingDir = workingDir
-    prevDir = currentDir
-    currentDir = newDir
-    return workingDir = `${workingDir}/${newDir}`
+    if (!folderDirectory[currentDir].includes(newDir)) {
+      if (folderDirectory[currentDir].includes(`${newDir}/`)) {
+        prevWorkingDir = workingDir;
+        prevDir = currentDir;
+        currentDir = `${newDir}/`;
+        return (workingDir = `${workingDir}/${newDir}`);
+      }
+      return false;
+    }
+    prevWorkingDir = workingDir;
+    prevDir = currentDir;
+    currentDir = newDir;
+    return (workingDir = `${workingDir}/${newDir}`);
   }
 
   function getDir() {
-    return workingDir
+    return workingDir;
   }
 
   function getList() {
-    return `${folderDirectory[currentDir].join(' ')} ${fileDirectory[currentDir].join(' ')}`.split(' ').join(' ')
+    return `${folderDirectory[currentDir].join(" ")} ${fileDirectory[
+      currentDir
+    ].join(" ")}`
+      .split(" ")
+      .join(" ");
   }
 
-  return {changeDir, getDir, getList}
+  return { changeDir, getDir, getList };
 };
 
 const displayController = () => {
-  const memory = storage()
+  const memory = storage();
   const container = document.querySelector(".container");
   let input = document.querySelector(".prompt");
   let form = document.querySelector(".currentForm");
@@ -53,11 +65,11 @@ const displayController = () => {
     const form = document.createElement("form");
     const input = document.createElement("input");
     spanUser.innerText = "user";
-    spanUser.classList.add('user')
+    spanUser.classList.add("user");
     spanHost.innerText = "@sevaaaDev";
-    spanHost.classList.add('host')
+    spanHost.classList.add("host");
     spanDir.innerText = `[${memory.getDir()}]`;
-    spanDir.classList.add('dir')
+    spanDir.classList.add("dir");
     p.appendChild(spanUser);
     p.appendChild(spanHost);
     p.appendChild(spanDir);
@@ -93,10 +105,10 @@ const displayController = () => {
 
   let command = {
     ls: () => {
-      const list = document.createElement('p')
-      list.innerText = memory.getList()
-      console.log(memory.getList())
-      container.appendChild(list)
+      const list = document.createElement("p");
+      list.innerText = memory.getList();
+      console.log(memory.getList());
+      container.appendChild(list);
       enter();
     },
     cls: () => {
@@ -104,16 +116,16 @@ const displayController = () => {
       enter();
     },
     cd: (newDir) => {
-      const value = memory.changeDir(newDir)
-      const info = document.createElement('p')
+      const value = memory.changeDir(newDir);
+      const info = document.createElement("p");
       if (value === false) {
-        info.innerText = 'No such directory'
-      } else if (value === 'where u goin') {
-        info.innerText = 'There is no directory up there'
+        info.innerText = "No such directory";
+      } else if (value === "where u goin") {
+        info.innerText = "There is no directory up there";
       }
-      container.appendChild(info)
-      enter()
-    }
+      container.appendChild(info);
+      enter();
+    },
   };
 
   return { enter, getInput, getForm, command };
@@ -127,7 +139,7 @@ const inputController = (() => {
   window.addEventListener("click", () => {
     input.focus();
   });
-  
+
   function submit(e) {
     e.preventDefault();
     checkInput();
@@ -141,10 +153,10 @@ const inputController = (() => {
   }
 
   function checkInput() {
-    if (input.value === '') return display.enter()
-    if (input.value.includes('cd')) {
-      return display.command[input.value.slice(0,2)](input.value.slice(3))
+    if (input.value === "") return display.enter();
+    if (input.value.includes("cd")) {
+      return display.command[input.value.trim().slice(0, 2)](input.value.slice(3).trim());
     }
-    display.command[input.value]()
+    display.command[input.value.trim()]();
   }
 })();
