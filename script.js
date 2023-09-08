@@ -6,8 +6,16 @@ const storage = () => {
 
   let fileDirectory = {
     "~": [],
-    "project/": ["test"],
+    "project/": ["calculator.txt"],
   };
+
+  let realDirectory = {
+    calculator :{
+    preview: 'https://sevaaadev.github.io/kalculator',
+    source: 'https://github.com/sevaaadev/kalculator'
+  }
+}
+
   let prevWorkingDir = "";
   let workingDir = "~";
   let prevDir = "";
@@ -46,8 +54,20 @@ const storage = () => {
       .split(" ")
       .join(" ");
   }
+  
+  function cat(file) {
+    if (fileDirectory[currentDir].includes(file)) {
+      let content = ''
+      for (let prop in realDirectory[file.replace('.txt', '')]) {
+        content = `${content} 
+        ${realDirectory[file.replace('.txt', '')][prop]}`
+      }
+      return content
+    }
+    return 'No such file'
+  }
 
-  return { changeDir, getDir, getList };
+  return { changeDir, getDir, getList, cat };
 };
 
 const displayController = () => {
@@ -103,7 +123,23 @@ const displayController = () => {
     return form;
   }
 
+  function wrongCommand() {
+    const error = document.createElement('p')
+    error.innerText = 'Command not found, type "?" to see list of all command'
+    container.appendChild(error)
+    enter()
+  }
+
   let command = {
+    '?': () => {
+      const lscommand = document.createElement('p')
+      lscommand.innerText = `? [list command]
+      cd [change directory]
+      ls [list file & folder]
+      cls [clear]`
+      container.appendChild(lscommand)
+      enter()
+    },
     ls: () => {
       const list = document.createElement("p");
       list.innerText = memory.getList();
@@ -126,9 +162,15 @@ const displayController = () => {
       container.appendChild(info);
       enter();
     },
+    cat: (file) => {
+      const content = document.createElement('p')
+      content.innerText = memory.cat(file)
+      container.append(content)
+      enter()
+    }
   };
 
-  return { enter, getInput, getForm, command };
+  return { enter, getInput, getForm, command, wrongCommand };
 };
 
 const inputController = (() => {
@@ -153,10 +195,14 @@ const inputController = (() => {
   }
 
   function checkInput() {
-    if (input.value === "") return display.enter();
     if (input.value.includes("cd")) {
       return display.command[input.value.trim().slice(0, 2)](input.value.slice(3).trim());
     }
-    display.command[input.value.trim()]();
+    if (input.value.includes('cat')) {
+      return display.command[input.value.trim().slice(0, 3)](input.value.slice(4).trim())
+    }
+    if (input.value === "") return display.enter();
+    if (!display.command[input.value.trim()]) return display.wrongCommand();
+    display.command[input.value.trim()]()
   }
 })();
