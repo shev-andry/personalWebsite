@@ -6,7 +6,7 @@ const storage = () => {
 
   let fileDirectory = {
     "~": [],
-    "project/": ["calculator.txt"],
+    "project/": ["calculator.txt", ],
   };
 
   let realDirectory = {
@@ -67,7 +67,15 @@ const storage = () => {
     return 'No such file'
   }
 
-  return { changeDir, getDir, getList, cat };
+  function open(file) {
+    if (fileDirectory[currentDir].includes(file)) {
+      window.open(realDirectory[file.replace('.txt', '')]['preview'], '_blank')
+      return 'Opening in another tab...'
+    }
+    return 'No such file' 
+  }
+
+  return { changeDir, getDir, getList, cat, open };
 };
 
 const displayController = () => {
@@ -133,8 +141,8 @@ const displayController = () => {
   let command = {
     '?': () => {
       const lscommand = document.createElement('p')
-      lscommand.innerText = `? [list command]
-      cd [change directory]
+      lscommand.innerText = `cd <directory> [change directory]
+      cat <filename> [see the content inside of a file]
       ls [list file & folder]
       cls [clear]`
       container.appendChild(lscommand)
@@ -166,6 +174,12 @@ const displayController = () => {
       const content = document.createElement('p')
       content.innerText = memory.cat(file)
       container.append(content)
+      enter()
+    },
+    open: (file) => {
+      const info = document.createElement('p')
+      info.innerText = memory.open(file)
+      container.append(info)
       enter()
     }
   };
@@ -200,6 +214,9 @@ const inputController = (() => {
     }
     if (input.value.includes('cat')) {
       return display.command[input.value.trim().slice(0, 3)](input.value.slice(4).trim())
+    }
+    if (input.value.includes('open')) {
+      return display.command[input.value.trim().slice(0, 4)](input.value.slice(5).trim())
     }
     if (input.value === "") return display.enter();
     if (!display.command[input.value.trim()]) return display.wrongCommand();
