@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 // TODO refactor changeDir function
 // TODO refactor the directory
@@ -10,42 +10,39 @@ const storageController = () => {
   };
 
   let fileDirectory = {
-    "~": [''],
-    "project/": ["kalculator.txt", ],
+    "~": [""],
+    "project/": ["kalculator.txt"],
   };
 
   let realDirectory = {
-    kalculator :{
-    preview: 'https://sevaaadev.github.io/kalculator',
-    source: 'https://github.com/sevaaadev/kalculator'
-  }
-}
+    kalculator: {
+      preview: "https://sevaaadev.github.io/kalculator",
+      source: "https://github.com/sevaaadev/kalculator",
+    },
+  };
 
   let prevWorkingDir = "";
   let workingDir = "~";
   let prevDir = "";
   let currentDir = workingDir;
 
-  console.log(currentDir);
   function changeDir(newDir) {
-    if (newDir === "..") {
-      if (currentDir === "~") return "where u goin";
-      currentDir = prevDir;
-      return (workingDir = prevWorkingDir);
+    if (folderDirectory[currentDir].includes(newDir)) {
+      prevWorkingDir = workingDir;
+      prevDir = currentDir;
+      currentDir = newDir;
+      return (workingDir = `${workingDir}/${newDir}`);
     }
-    if (!folderDirectory[currentDir].includes(newDir)) {
-      if (folderDirectory[currentDir].includes(`${newDir}/`)) {
-        prevWorkingDir = workingDir;
-        prevDir = currentDir;
-        currentDir = `${newDir}/`;
-        return (workingDir = `${workingDir}/${newDir}`);
-      }
-      return false;
+    if (folderDirectory[currentDir].includes(`${newDir}/`)) {
+      prevWorkingDir = workingDir;
+      prevDir = currentDir;
+      currentDir = `${newDir}/`;
+      return (workingDir = `${workingDir}/${newDir}`);
     }
-    prevWorkingDir = workingDir;
-    prevDir = currentDir;
-    currentDir = newDir;
-    return (workingDir = `${workingDir}/${newDir}`);
+    if (!newDir === "..") return false
+    if (currentDir === "~") return "where u goin";
+    currentDir = prevDir;
+    return (workingDir = prevWorkingDir);
   }
 
   function getDir() {
@@ -56,29 +53,25 @@ const storageController = () => {
     return `${folderDirectory[currentDir].join(" ")} ${fileDirectory[
       currentDir
     ].join(" ")}`
-      .split(" ").sort()
+      .split(" ")
+      .sort()
       .join(" ");
   }
-  
+
   function cat(file) {
-    if (fileDirectory[currentDir].includes(file)) {
-      let content = ''
-      for (let prop in realDirectory[file.replace('.txt', '')]) {
-        content = `${content} 
-        ${realDirectory[file.replace('.txt', '')][prop]}
-        `
-      }
-      return content
+    if (!fileDirectory[currentDir].includes(file)) return "No such file";
+    let content = "";
+    for (let prop in realDirectory[file.replace(".txt", "")]) {
+      content = `${content} 
+      ${realDirectory[file.replace(".txt", "")][prop]}`;
     }
-    return 'No such file'
+    return content;
   }
 
   function open(file) {
-    if (fileDirectory[currentDir].includes(file)) {
-      window.open(realDirectory[file.replace('.txt', '')]['preview'], '_blank')
-      return 'Opening in another tab...'
-    }
-    return 'No such file' 
+    if (!fileDirectory[currentDir].includes(file)) return "No such file";
+    window.open(realDirectory[file.replace(".txt", "")]["preview"], "_blank");
+    return "Opening in another tab...";
   }
 
   return { changeDir, getDir, getList, cat, open };
@@ -138,26 +131,25 @@ const displayController = () => {
   }
 
   function wrongCommand() {
-    const error = document.createElement('p')
-    error.innerText = 'Command not found, type "?" to see list of all command'
-    container.appendChild(error)
-    enter()
+    const error = document.createElement("p");
+    error.innerText = 'Command not found, type "?" to see list of all command';
+    container.appendChild(error);
+    enter();
   }
 
   let command = {
     "": () => {
-      enter()
+      enter();
     },
-    '?': () => {
-      const lscommand = document.createElement('p')
-      lscommand.innerText = 
-      `cd <directory> [change directory]
+    "?": () => {
+      const lscommand = document.createElement("p");
+      lscommand.innerText = `cd <directory> [change directory]
       cat <file-name> [see the content inside of a file]
       open <file-name> [open the link inside of a file]
       ls [list file & folder]
-      cls [clear]`
-      container.appendChild(lscommand)
-      enter()
+      cls [clear]`;
+      container.appendChild(lscommand);
+      enter();
     },
     ls: () => {
       const list = document.createElement("p");
@@ -176,7 +168,7 @@ const displayController = () => {
       if (value === false) {
         info.innerText = "No such directory";
         container.appendChild(info);
-      } 
+      }
       if (value === "where u goin") {
         info.innerText = "There is no directory up there";
         container.appendChild(info);
@@ -184,17 +176,17 @@ const displayController = () => {
       enter();
     },
     cat: (file) => {
-      const content = document.createElement('p')
-      content.innerText = storage.cat(file)
-      container.append(content)
-      enter()
+      const content = document.createElement("p");
+      content.innerText = storage.cat(file);
+      container.append(content);
+      enter();
     },
     open: (file) => {
-      const info = document.createElement('p')
-      info.innerText = storage.open(file)
-      container.append(info)
-      enter()
-    }
+      const info = document.createElement("p");
+      info.innerText = storage.open(file);
+      container.append(info);
+      enter();
+    },
   };
 
   return { enter, getInput, getForm, command, wrongCommand };
@@ -222,19 +214,24 @@ const inputController = (() => {
   }
 
   function checkInput() {
-    const command = getCommand()
-    const param = getParam()
+    const command = getCommand();
+    const param = getParam();
     if (!display.command[command]) return display.wrongCommand();
-    display.command[command](param)
+    display.command[command](param);
   }
 
   function getCommand() {
-    let space = input.value.trim().indexOf(' ')
-    return space === -1 ? input.value.trim() : input.value.trim().slice(0, space)
+    let space = input.value.trim().indexOf(" ");
+    return space === -1
+      ? input.value.trim()
+      : input.value.trim().slice(0, space);
   }
 
   function getParam() {
-    let space = input.value.trim().indexOf(' ')
-    return input.value.trim().slice(space + 1).trim()
+    let space = input.value.trim().indexOf(" ");
+    return input.value
+      .trim()
+      .slice(space + 1)
+      .trim();
   }
 })();
