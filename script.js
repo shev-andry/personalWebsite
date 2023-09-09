@@ -3,6 +3,15 @@
 // TODO refactor changeDir function
 // TODO refactor the directory
 
+const contentFactory = (preview, source, description) => {
+  return {
+    preview,
+    source,
+    description
+  }
+}
+
+
 const storageController = () => {
   let folderDirectory = {
     "~": ["project/", "profile/"],
@@ -11,14 +20,13 @@ const storageController = () => {
 
   let fileDirectory = {
     "~": [""],
-    "project/": ["kalculator.txt"],
+    "project/": ["kalculator.txt", 'pixelPaint.txt', 'TicTacToe.txt'],
   };
 
-  let realDirectory = {
-    kalculator: {
-      preview: "https://sevaaadev.github.io/kalculator",
-      source: "https://github.com/sevaaadev/kalculator",
-    },
+  let contentDirectory = {
+    kalculator: contentFactory("https://sevaaadev.github.io/kalculator", "https://github.com/sevaaadev/kalculator", 'a simple calculator that can do basic calculation'),
+    pixelPaint: contentFactory('https://sevaaadev.github.io/pixelPaint', "https://github.com/sevaaaDev/pixelPaint", 'a website where you can make pixel art'),
+    TicTacToe: contentFactory('https://sevaaadev.github.io/TicTacToe', 'https://github.com/sevaaaDev/TicTacToe', 'Tic tac toe game')
   };
 
   let prevWorkingDir = "";
@@ -64,16 +72,16 @@ const storageController = () => {
   function cat(file) {
     if (!fileDirectory[currentDir].includes(file)) return "No such file";
     let content = "";
-    for (let prop in realDirectory[file.replace(".txt", "")]) {
+    for (let prop in contentDirectory[file.replace(".txt", "")]) {
       content = `${content} 
-      ${realDirectory[file.replace(".txt", "")][prop]}`;
+      ${contentDirectory[file.replace(".txt", "")][prop]}`;
     }
     return content;
   }
 
   function open(file) {
     if (!fileDirectory[currentDir].includes(file)) return "No such file";
-    window.open(realDirectory[file.replace(".txt", "")]["preview"], "_blank");
+    window.open(contentDirectory[file.replace(".txt", "")]["preview"], "_blank");
     return "Opening in another tab...";
   }
 
