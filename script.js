@@ -1,16 +1,21 @@
-const storage = () => {
+'use strict'
+
+// TODO refactor changeDir function
+// TODO refactor the directory
+
+const storageController = () => {
   let folderDirectory = {
     "~": ["project/", "profile/"],
     "project/": [],
   };
 
   let fileDirectory = {
-    "~": [],
-    "project/": ["calculator.txt", ],
+    "~": [''],
+    "project/": ["kalculator.txt", ],
   };
 
   let realDirectory = {
-    calculator :{
+    kalculator :{
     preview: 'https://sevaaadev.github.io/kalculator',
     source: 'https://github.com/sevaaadev/kalculator'
   }
@@ -51,7 +56,7 @@ const storage = () => {
     return `${folderDirectory[currentDir].join(" ")} ${fileDirectory[
       currentDir
     ].join(" ")}`
-      .split(" ")
+      .split(" ").sort()
       .join(" ");
   }
   
@@ -60,7 +65,8 @@ const storage = () => {
       let content = ''
       for (let prop in realDirectory[file.replace('.txt', '')]) {
         content = `${content} 
-        ${realDirectory[file.replace('.txt', '')][prop]}`
+        ${realDirectory[file.replace('.txt', '')][prop]}
+        `
       }
       return content
     }
@@ -79,7 +85,7 @@ const storage = () => {
 };
 
 const displayController = () => {
-  const memory = storage();
+  const storage = storageController();
   const container = document.querySelector(".container");
   let input = document.querySelector(".prompt");
   let form = document.querySelector(".currentForm");
@@ -96,7 +102,7 @@ const displayController = () => {
     spanUser.classList.add("user");
     spanHost.innerText = "@sevaaaDev";
     spanHost.classList.add("host");
-    spanDir.innerText = `[${memory.getDir()}]`;
+    spanDir.innerText = `[${storage.getDir()}]`;
     spanDir.classList.add("dir");
     p.appendChild(spanUser);
     p.appendChild(spanHost);
@@ -139,11 +145,15 @@ const displayController = () => {
   }
 
   let command = {
+    "": () => {
+      enter()
+    },
     '?': () => {
       const lscommand = document.createElement('p')
-      lscommand.innerText = `cd <directory> [change directory]
-      cat <filename> [see the content inside of a file]
-      open <filename> [open the link inside of a file]
+      lscommand.innerText = 
+      `cd <directory> [change directory]
+      cat <file-name> [see the content inside of a file]
+      open <file-name> [open the link inside of a file]
       ls [list file & folder]
       cls [clear]`
       container.appendChild(lscommand)
@@ -151,8 +161,8 @@ const displayController = () => {
     },
     ls: () => {
       const list = document.createElement("p");
-      list.innerText = memory.getList();
-      console.log(memory.getList());
+      list.innerText = storage.getList();
+      console.log(storage.getList());
       container.appendChild(list);
       enter();
     },
@@ -161,25 +171,27 @@ const displayController = () => {
       enter();
     },
     cd: (newDir) => {
-      const value = memory.changeDir(newDir);
+      const value = storage.changeDir(newDir);
       const info = document.createElement("p");
       if (value === false) {
         info.innerText = "No such directory";
-      } else if (value === "where u goin") {
+        container.appendChild(info);
+      } 
+      if (value === "where u goin") {
         info.innerText = "There is no directory up there";
+        container.appendChild(info);
       }
-      container.appendChild(info);
       enter();
     },
     cat: (file) => {
       const content = document.createElement('p')
-      content.innerText = memory.cat(file)
+      content.innerText = storage.cat(file)
       container.append(content)
       enter()
     },
     open: (file) => {
       const info = document.createElement('p')
-      info.innerText = memory.open(file)
+      info.innerText = storage.open(file)
       container.append(info)
       enter()
     }
@@ -210,17 +222,19 @@ const inputController = (() => {
   }
 
   function checkInput() {
-    if (input.value.includes("cd")) {
-      return display.command[input.value.trim().slice(0, 2)](input.value.slice(3).trim());
-    }
-    if (input.value.includes('cat')) {
-      return display.command[input.value.trim().slice(0, 3)](input.value.slice(4).trim())
-    }
-    if (input.value.includes('open')) {
-      return display.command[input.value.trim().slice(0, 4)](input.value.slice(5).trim())
-    }
-    if (input.value === "") return display.enter();
-    if (!display.command[input.value.trim()]) return display.wrongCommand();
-    display.command[input.value.trim()]()
+    const command = getCommand()
+    const param = getParam()
+    if (!display.command[command]) return display.wrongCommand();
+    display.command[command](param)
+  }
+
+  function getCommand() {
+    let space = input.value.trim().indexOf(' ')
+    return space === -1 ? input.value.trim() : input.value.trim().slice(0, space)
+  }
+
+  function getParam() {
+    let space = input.value.trim().indexOf(' ')
+    return input.value.trim().slice(space + 1).trim()
   }
 })();
