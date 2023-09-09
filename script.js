@@ -31,7 +31,10 @@ const storageController = () => {
       prevWorkingDir = workingDir;
       prevDir = currentDir;
       currentDir = newDir;
-      return (workingDir = `${workingDir}/${newDir}`);
+      return (workingDir = `${workingDir}/${newDir.slice(
+        0,
+        newDir.length - 1
+      )}`);
     }
     if (folderDirectory[currentDir].includes(`${newDir}/`)) {
       prevWorkingDir = workingDir;
@@ -39,7 +42,7 @@ const storageController = () => {
       currentDir = `${newDir}/`;
       return (workingDir = `${workingDir}/${newDir}`);
     }
-    if (!newDir === "..") return false
+    if (!newDir === "..") return false;
     if (currentDir === "~") return "where u goin";
     currentDir = prevDir;
     return (workingDir = prevWorkingDir);
