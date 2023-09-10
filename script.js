@@ -1,6 +1,5 @@
 "use strict";
 
-// TODO refactor changeDir function
 // TODO refactor the directory
 
 const contentFactory = (preview, source, description) => {
@@ -50,7 +49,7 @@ const storageController = () => {
       currentDir = `${newDir}/`;
       return (workingDir = `${workingDir}/${newDir}`);
     }
-    if (!newDir === "..") return false;
+    if (newDir !== "..") return false;
     if (currentDir === "~") return "where u goin";
     currentDir = prevDir;
     return (workingDir = prevWorkingDir);
@@ -227,7 +226,7 @@ const inputController = (() => {
   function checkInput() {
     const command = getCommand();
     const param = getParam();
-    if (!display.command[command]) return display.wrongCommand();
+    if (display.command[command] == null) return display.wrongCommand();
     display.command[command](param);
   }
 
@@ -237,7 +236,6 @@ const inputController = (() => {
       ? input.value.trim()
       : input.value.trim().slice(0, space);
   }
-
   function getParam() {
     let space = input.value.trim().indexOf(" ");
     return input.value
