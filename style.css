@@ -1,3 +1,12 @@
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/fira-mono-v14-latin-regular.woff2') format('woff2'); 
+}
+
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +14,7 @@
 }
 
 body {
-  font-family: monospace;
+  font-family: 'Fira Mono';
   color: white;
   background-color: #1e1e2e;
   padding: 0.3rem;
@@ -33,6 +42,8 @@ input {
   background-color: #1e1e2e;
   border: none;
   color: white;
+  font-family: 'Fira Code';
+  font-size: 1.1rem;
 }
 
 input:focus {
