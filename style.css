@@ -7,7 +7,7 @@
 body {
   font-family: monospace;
   color: white;
-  background-color: black;
+  background-color: #1e1e2e;
   padding: 0.3rem;
 }
 
@@ -18,19 +18,19 @@ body {
 }
 
 .user {
-  color: green;
+  color: #a6e3a1;
 }
 
 .host {
-  color: lightseagreen;
+  color: #74c7ec;
 }
 
 .dir {
-  color: orange;
+  color: #fab387;
 }
 
 input {
-  background-color: black;
+  background-color: #1e1e2e;
   border: none;
   color: white;
 }
