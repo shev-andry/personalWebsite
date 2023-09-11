@@ -6,10 +6,9 @@ const contentFactory = (preview, source, description) => {
   return {
     preview,
     source,
-    description
-  }
-}
-
+    description,
+  };
+};
 
 const storageController = () => {
   let folderDirectory = {
@@ -19,13 +18,25 @@ const storageController = () => {
 
   let fileDirectory = {
     "~": [""],
-    "project/": ["kalculator.txt", 'pixelPaint.txt', 'TicTacToe.txt'],
+    "project/": ["kalculator.txt", "pixelPaint.txt", "TicTacToe.txt"],
   };
 
   let contentDirectory = {
-    kalculator: contentFactory("https://sevaaadev.github.io/kalculator", "https://github.com/sevaaadev/kalculator", 'a simple calculator that can do basic calculation'),
-    pixelPaint: contentFactory('https://sevaaadev.github.io/pixelPaint', "https://github.com/sevaaaDev/pixelPaint", 'a website where you can make pixel art'),
-    TicTacToe: contentFactory('https://sevaaadev.github.io/TicTacToe', 'https://github.com/sevaaaDev/TicTacToe', 'Tic tac toe game')
+    kalculator: contentFactory(
+      "https://sevaaadev.github.io/kalculator",
+      "https://github.com/sevaaadev/kalculator",
+      "a simple calculator that can do basic calculation"
+    ),
+    pixelPaint: contentFactory(
+      "https://sevaaadev.github.io/pixelPaint",
+      "https://github.com/sevaaaDev/pixelPaint",
+      "a website where you can make pixel art"
+    ),
+    TicTacToe: contentFactory(
+      "https://sevaaadev.github.io/TicTacToe",
+      "https://github.com/sevaaaDev/TicTacToe",
+      "Tic tac toe game"
+    ),
   };
 
   let prevWorkingDir = "";
@@ -80,7 +91,10 @@ const storageController = () => {
 
   function open(file) {
     if (!fileDirectory[currentDir].includes(file)) return "No such file";
-    window.open(contentDirectory[file.replace(".txt", "")]["preview"], "_blank");
+    window.open(
+      contentDirectory[file.replace(".txt", "")]["preview"],
+      "_blank"
+    );
     return "Opening in another tab...";
   }
 
@@ -238,9 +252,11 @@ const inputController = (() => {
   }
   function getParam() {
     let space = input.value.trim().indexOf(" ");
-    return input.value
-      .trim()
-      .slice(space + 1)
-      .trim();
+    return space === -1
+      ? undefined
+      : input.value
+          .trim()
+          .slice(space + 1)
+          .trim();
   }
 })();
